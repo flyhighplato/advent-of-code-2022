@@ -1,27 +1,16 @@
-
-use std::{
-    fs::File,
-    io::{prelude::*, BufReader},
-    path::Path,
-};
-
-fn lines_from_file(filename: impl AsRef<Path>) -> Vec<String> {
-    let file = File::open(filename).expect("no such file");
-    let buf = BufReader::new(file);
-    buf.lines()
-        .map(|l| l.expect("Could not parse line"))
-        .collect()
-}
+use advent::file;
 
 fn calc_nmax_calories_sum(lines: Vec<Option<i32>>, n: usize) -> i32 {
     let mut totals: Vec<i32> = vec![0];
 
-    for line in lines {
-        if line.is_none() {
-            totals.push(0);
-        } else {
-            let last_index = totals.len()-1;
-            totals[last_index] += line.unwrap()
+    for maybe_line in lines {
+        match maybe_line {
+            Some(line) => {          
+                totals
+                    .last_mut()
+                    .map(|last| *last += line);
+            }
+            None => totals.push(0),
         }
     }
 
@@ -36,7 +25,8 @@ fn calc_nmax_calories_sum(lines: Vec<Option<i32>>, n: usize) -> i32 {
 }
 
 fn main() {
-    let lines = lines_from_file("input.txt")
+    
+    let lines = file::lines_from_file("./src/bin/day1/input.txt")
                                     .iter()
                                     .map(|f| f.parse::<i32>().ok())
                                     .collect();
