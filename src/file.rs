@@ -1,7 +1,8 @@
 use std::{
+    env,
     fs::File,
-    io::{prelude::*, BufReader, self},
-    path::{Path, PathBuf}, env,
+    io::{self, prelude::*, BufReader},
+    path::{Path, PathBuf},
 };
 
 use path_clean::PathClean;
@@ -13,7 +14,8 @@ pub fn absolute_path(path: impl AsRef<Path>) -> io::Result<PathBuf> {
         path.to_path_buf()
     } else {
         env::current_dir()?.join(path)
-    }.clean();
+    }
+    .clean();
 
     Ok(absolute_path)
 }
